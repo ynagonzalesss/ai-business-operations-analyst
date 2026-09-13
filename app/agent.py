@@ -37,8 +37,8 @@ def _demo_reply(question: str) -> AgentReply:
         weak = next(row for row in comparison["data"]["properties"] if row["property_id"] == 7)
         benchmark = comparison["data"]["portfolio_benchmark"]
         text = (f"**Finding:** Property 7 is underperforming on RevPAR.\n\n"
-                f"**Evidence:** Its RevPAR is ${weak['revpar']:,.2f}, {abs(weak['vs_portfolio_revpar_pct']):.1f}% below the portfolio's ${benchmark['revpar']:,.2f}. "
-                f"Occupancy is {weak['occupancy']:.1%} versus {benchmark['occupancy']:.1%}, while ADR is ${weak['adr']:,.2f} versus ${benchmark['adr']:,.2f}.\n\n"
+                f"**Evidence:** Its RevPAR is USD {weak['revpar']:,.2f}, {abs(weak['vs_portfolio_revpar_pct']):.1f}% below the portfolio's USD {benchmark['revpar']:,.2f}. "
+                f"Occupancy is {weak['occupancy']:.1%} versus {benchmark['occupancy']:.1%}, while ADR is USD {weak['adr']:,.2f} versus USD {benchmark['adr']:,.2f}.\n\n"
                 f"**Interpretation:** The large occupancy gap is the primary driver; pricing is comparatively closer to the portfolio level.\n\n"
                 f"**Recommendation:** Investigate demand generation and booking conversion before applying a broad ADR reduction.\n\n"
                 f"**Limitation:** The dataset has no channel-level traffic or conversion data, so it cannot identify the exact cause of the booking-volume gap.")
@@ -48,7 +48,7 @@ def _demo_reply(question: str) -> AgentReply:
         result = compare_properties(selected)
         if not result["success"]: return AgentReply("I couldn't complete that comparison: " + result["error"], [result], [])
         rows = result["data"]["properties"]
-        text = "**Evidence-based comparison:**\n\n" + "\n".join(f"- **{r['property_name']} (Property {r['property_id']})**: occupancy {r['occupancy']:.1%}, ADR ${r['adr']:,.2f}, RevPAR ${r['revpar']:,.2f}, contribution margin ${r['contribution_margin']:,.0f}." for r in rows) + "\n\n**Limitation:** This compares recorded portfolio metrics only; it does not establish causality."
+        text = "**Evidence-based comparison:**\n\n" + "\n".join(f"- **{r['property_name']} (Property {r['property_id']})**: occupancy {r['occupancy']:.1%}, ADR USD {r['adr']:,.2f}, RevPAR USD {r['revpar']:,.2f}, contribution margin USD {r['contribution_margin']:,.0f}." for r in rows) + "\n\n**Limitation:** This compares recorded portfolio metrics only; it does not establish causality."
         return AgentReply(text, [result], [f"Compared Properties {', '.join(map(str, selected))}"])
     if "trend" in normalized or "improved" in normalized or "last six" in normalized:
         property_id = ids[0] if ids else 4
