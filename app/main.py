@@ -2,12 +2,19 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+ROOT = Path(__file__).resolve().parents[1]
+# Streamlit executes this entrypoint from app/, while package imports are rooted
+# at the repository. Make the layout work identically locally and on Cloud.
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+load_dotenv(ROOT / ".env")
 # Community Cloud exposes secrets through st.secrets rather than a local .env file.
 # Copy only declared runtime settings into this process; never render or log their values.
 try:
